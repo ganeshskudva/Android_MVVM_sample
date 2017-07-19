@@ -20,6 +20,7 @@ public class ItemPersonViewModel extends BaseObservable implements ViewModel {
     private DateFormat dateFormat;
     private Date date;
     private String reportDate;
+    public final static int MILLISECONDS = 1000;
 
     public ItemPersonViewModel(Context context, Person person) {
         this.context = context;
@@ -39,14 +40,14 @@ public class ItemPersonViewModel extends BaseObservable implements ViewModel {
 
     public String getArrivetime()
     {
-        date = new Date(person.getArriveTime() * 1000);
+        date = new Date(person.getArriveTime() * MILLISECONDS);
         reportDate = dateFormat.format(date);
         return reportDate +" - ";
     }
 
     public String getDeparttime()
     {
-        date = new Date(person.getLeaveTime() * 1000);
+        date = new Date(person.getLeaveTime() * MILLISECONDS);
         reportDate = dateFormat.format(date);
         return reportDate;
     }
@@ -58,6 +59,5 @@ public class ItemPersonViewModel extends BaseObservable implements ViewModel {
 
     @Override
     public void destroy() {
-        //In this case destroy doesn't need to do anything because there is not async calls
     }
 }
