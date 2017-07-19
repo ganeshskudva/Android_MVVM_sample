@@ -48,7 +48,7 @@ final public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.Pers
 
     @Override
     public void onBindViewHolder(PersonViewHolder holder, int position) {
-        holder.bindRepository(persons.get(position));
+        holder.bindPerson(persons.get(position));
     }
 
     @Override
@@ -64,7 +64,7 @@ final public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.Pers
             this.binding = binding;
         }
 
-        void bindRepository(Person person) {
+        void bindPerson(Person person) {
             if (binding.getViewModel() == null) {
                 binding.setViewModel(new ItemPersonViewModel(itemView.getContext(), person));
             } else {
