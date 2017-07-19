@@ -1,30 +1,25 @@
 package com.example.gkudva.fsquare.View.Adapters;
 
-import android.content.Context;
-import android.graphics.Color;
+import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.example.gkudva.fsquare.Model.Person;
 import com.example.gkudva.fsquare.R;
+import com.example.gkudva.fsquare.ViewModel.ItemPersonViewModel;
+import com.example.gkudva.fsquare.databinding.ItemPersonBinding;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by gkudva on 16/07/17.
  */
 
-final public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.ViewHolder> {
+final public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.PersonViewHolder> {
 
     private List<Person> persons;
-    public final static String NO_VISITORS = "No Visitors";
 
     public PersonAdapter()
     {
@@ -41,72 +36,42 @@ final public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.View
         this.persons = persons;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-        public TextView tvName;
-        public TextView tvATime;
-        public TextView tvDTime;
-
-        public ViewHolder(View itemView) {
-
-            super(itemView);
-
-            tvName = (TextView) itemView.findViewById(R.id.tvName);
-            tvATime = (TextView) itemView.findViewById(R.id.tvATime);
-            tvDTime = (TextView) itemView.findViewById(R.id.tvDTime);
-        }
+    @Override
+    public PersonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        ItemPersonBinding binding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.getContext()),
+                R.layout.item_person,
+                parent,
+                false);
+        return new PersonViewHolder(binding);
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-
-        View contactView = inflater.inflate(R.layout.item, parent, false);
-
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
-    }
-
-    @Override
-    public void onBindViewHolder(PersonAdapter.ViewHolder holder, int position) {
-        Person person = persons.get(position);
-        boolean setDimColor = false;
-        DateFormat df = new SimpleDateFormat("hh:mm a");
-        Date date;
-
-        if (person.getName().contains(NO_VISITORS))
-        {
-            setDimColor = true;
-        }
-        holder.tvName.setText(person.getName());
-
-        date = new Date(person.getArriveTime() * 1000);
-        String reportDate = df.format(date);
-        holder.tvATime.setText(reportDate +" - ");
-
-        date = new Date(person.getLeaveTime() * 1000);
-        reportDate = df.format(date);
-        holder.tvDTime.setText(reportDate);
-
-        if (setDimColor)
-        {
-            holder.tvName.setTextColor(Color.LTGRAY);
-            holder.tvATime.setTextColor(Color.LTGRAY);
-            holder.tvDTime.setTextColor(Color.LTGRAY);
-        }
-        else
-        {
-            holder.tvName.setTextColor(Color.BLACK);
-            holder.tvATime.setTextColor(Color.BLACK);
-            holder.tvDTime.setTextColor(Color.BLACK);
-        }
-
+    public void onBindViewHolder(PersonViewHolder holder, int position) {
+        holder.bindRepository(persons.get(position));
     }
 
     @Override
     public int getItemCount() {
         return persons.size();
     }
+
+    public static class PersonViewHolder extends RecyclerView.ViewHolder {
+        final ItemPersonBinding binding;
+
+        public PersonViewHolder(ItemPersonBinding binding) {
+            super(binding.cardView);
+            this.binding = binding;
+        }
+
+        void bindRepository(Person person) {
+            if (binding.getViewModel() == null) {
+                binding.setViewModel(new ItemPersonViewModel(itemView.getContext(), person));
+            } else {
+                binding.getViewModel().setPerson(person);
+            }
+        }
+    }
+
 }
 

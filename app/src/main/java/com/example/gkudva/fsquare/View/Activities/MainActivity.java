@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements MainViewModel.Dat
 
     protected void onRestoreInstanceState(Bundle state) {
         super.onRestoreInstanceState(state);
-        // Retrieve list state and list/item positions
+        // Retrieve list state and list/item_person positions
         if(state != null)
             listState = state.getParcelable(LIST_STATE_KEY);
     }
