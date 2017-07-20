@@ -62,14 +62,12 @@ public class MainActivity extends AppCompatActivity implements MainViewModel.Dat
 
     protected void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);
-        // Save list state
         listState = layoutManager.onSaveInstanceState();
         state.putParcelable(LIST_STATE_KEY, listState);
     }
 
     protected void onRestoreInstanceState(Bundle state) {
         super.onRestoreInstanceState(state);
-        // Retrieve list state and list/item_person positions
         if(state != null)
             listState = state.getParcelable(LIST_STATE_KEY);
     }

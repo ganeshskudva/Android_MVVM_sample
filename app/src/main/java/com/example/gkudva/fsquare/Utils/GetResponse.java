@@ -65,11 +65,16 @@ public class GetResponse extends AsyncTask<Void, Void, Venue> implements Utils{
     }
 
     public void sortPeople() {
+        //get venue start time
         long startTime = venueFull.getOpenTime();
+        //get venue close time
         long closeTime = venueFull.getCloseTime();
 
         tempList = venueFull.getVisitors();
 
+        /*
+         * Sort the list of customers based on their arrival times in non-decreasing order
+         */
         Collections.sort(tempList, new Comparator<Person>() {
             public int compare(Person p1, Person p2) {
                 if (p1.getArriveTime() < p2.getArriveTime()) {
@@ -77,6 +82,11 @@ public class GetResponse extends AsyncTask<Void, Void, Venue> implements Utils{
                 } else if (p1.getArriveTime() > p2.getArriveTime()) {
                     return 1;
                 } else {
+                    /*
+                     * If Arrival times of both customers the same,
+                     * then sort based on their Leave Time. The customer
+                     * who stays for the shortest period of time comes ahead.
+                     */
                     if (p1.getLeaveTime() < p2.getLeaveTime())
                     {
                         return -1;
@@ -93,15 +103,29 @@ public class GetResponse extends AsyncTask<Void, Void, Venue> implements Utils{
             }
         });
 
+        /*
+         * Once the list of customers is sorted iterate over the list to calculate idle time
+         * To begin with, startTime venue open time
+         */
         for (Person person: tempList)
         {
+            /*
+             * If startTime is less than the incoming customer's startTime
+             * then insert a dummy Person into the Arraylist. This dummy Person
+             * is to show the "No Visitors" card in the Recycler View
+             */
             if (startTime < person.getArriveTime())
             {
+                // The place is idle until the ArriveTime of this person
                 Person psn = new Person(NO_VISITORS, startTime, person.getArriveTime());
                 personList.add(psn);
             }
             personList.add(person);
 
+            /*
+             * Update startTime to the LeaveTime of the customer
+             * who stays for longer time than the previous customer
+             */
             if (person.getLeaveTime() > startTime) {
                 startTime = person.getLeaveTime();
             }

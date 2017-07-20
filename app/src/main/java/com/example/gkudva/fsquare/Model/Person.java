@@ -39,6 +39,11 @@ final public class Person {
     }
 
     public Person( String name, long arriveTime, long leaveTime) {
+        /*
+         * Dummy Person. This is used to show "No Visitors" card in Recycler View
+         * The id for this person is always set to 0. This helps to identify whether
+         * this person is dummy or not
+         */
         this.id = 0;
         this.name = name;
         this.arriveTime = arriveTime;
